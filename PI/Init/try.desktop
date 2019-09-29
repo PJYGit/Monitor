@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=test
+Comment=Python Program
+Exec=python /home/pi/test.py
+Icon=/home/pi/CameraPI.png
+Terminal=false
+MultipleArgs=false
+Type=Application
+Categories=Application;Development;
+StartupNotify=true

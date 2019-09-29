@@ -1,0 +1,59 @@
+CameraPI 后端PI Json交互接口规范
+
+本文件描述了服务器端与PI的Json交互规范
+
+目前端口 8081
+后台地址前缀目前为/server
+
+请使用ip:端口 + 前缀 + 地址的方式获取json
+	例: 127.0.0.1:8081/server/user/login
+	
+    /* Receive heartbeat from PI
+     * local value: -1 for device no response(temp disconnected)
+     *              0 for device shutdown
+     *              1 for devices pause
+     *              2 for devices run as normal
+     *
+     *  when devices list shown, for any devices no response, set it to -1.
+     *  when a devices with -1 state heart beat, set state to 2
+     *  otherwise response with value in data board.
+     */
+
+1.服务器扫描
+	地址：/pi/hi
+	参数：{
+		mac		:	设备mac
+	}
+	返回：{
+		id		:	设备id
+	}
+	描述：
+		向内网（子网掩码255.255.255.0）扫描服务器，帮助树莓派确定服务器ip，记录设备id，用于身份标志
+
+2.心跳包及服务端反控
+	地址：/pi/beat
+	参数：{
+		id		:	设备id
+		time	:	int时间戳
+	}
+	返回：{
+		time	:	int时间戳
+		op		:	操作码:
+						0	:	关机
+						1	:	暂停
+						2	:	重新启用
+	}
+	描述：
+		PI端每5秒向服务器发送心跳包，服务器返回时间以及对PI的操作码，PI指定对应操作
+		
+3.照片提交
+	[请使用post以确保长表单可以被正确提交]
+	地址:/pi/uploat
+	参数:{
+		id		:	设备id
+		type	:	物品类型:
+						0	:	人
+						1	:	猫
+						2	:	其他
+		data	:	图片二进制文件
+	}
